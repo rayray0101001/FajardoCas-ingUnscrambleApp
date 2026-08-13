@@ -46,19 +46,19 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GameScreen() {
     val words = remember {
-        listOf(
-            "CAT" to "TAC",
-            "DOG" to "GDO",
-            "BOOK" to "KOOB"
-        )
+        listOf("CAT", "DOG", "BOOK")
     }
 
     var currentWordIndex by remember { mutableIntStateOf(0) }
     var userAnswer by remember { mutableStateOf("") }
     var score by remember { mutableIntStateOf(0) }
 
+    // Phase 5: Create state for the scrambled word and initialize it
+    var scrambledWord by remember {
+        mutableStateOf(words[0].shuffled().joinToString(""))
+    }
+
     val isGameOver = currentWordIndex >= words.size
-    val currentWordPair = if (!isGameOver) words[currentWordIndex] else null
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -66,12 +66,15 @@ fun GameScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         if (!isGameOver) {
+            val correctAnswer = words[currentWordIndex]
+
             Text(
                 text = "UNSCRAMBLE",
                 fontSize = 30.sp
             )
+            // Phase 5: Display the scrambled word
             Text(
-                text = currentWordPair?.second ?: "",
+                text = scrambledWord,
                 fontSize = 40.sp,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
@@ -93,9 +96,14 @@ fun GameScreen() {
             )
             Button(
                 onClick = {
-                    if (userAnswer.trim().equals(currentWordPair?.first, ignoreCase = true)) {
+                    if (userAnswer.trim().equals(correctAnswer, ignoreCase = true)) {
                         score++
                         currentWordIndex++
+                        
+                        // Phase 5: Change the scrambled word after a correct answer
+                        if (currentWordIndex < words.size) {
+                            scrambledWord = words[currentWordIndex].shuffled().joinToString("")
+                        }
                     }
                     userAnswer = ""
                 }
@@ -117,6 +125,8 @@ fun GameScreen() {
                     score = 0
                     currentWordIndex = 0
                     userAnswer = ""
+                    // Phase 5: Reset scrambled word for restart
+                    scrambledWord = words[0].shuffled().joinToString("")
                 }
             ) {
                 Text("Play Again")
