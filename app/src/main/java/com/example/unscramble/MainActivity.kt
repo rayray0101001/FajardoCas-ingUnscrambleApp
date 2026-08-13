@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,7 +22,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             UnscrambleTheme {
-                GameScreen()
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    GameScreen()
+                }
             }
         }
     }
@@ -66,7 +69,9 @@ fun GameScreen() {
 @Preview(showBackground = true)
 @Composable
 fun GameScreenPreview() {
-    UnscrambleTheme {
-        GameScreen()
+    UnscrambleTheme(dynamicColor = false) {
+        Surface {
+            GameScreen()
+        }
     }
 }
